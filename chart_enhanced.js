@@ -15,10 +15,10 @@
 
 	//Declare root variable - window in the browser, global on the server
 	var root = this,
-		previous = root.ChartEnhaced;
+		previous = root.ChartEnhanced;
 
-	//Occupy the global variable of ChartEnhaced, and create a simple base class
-	var ChartEnhaced = function(context){
+	//Occupy the global variable of ChartEnhanced, and create a simple base class
+	var ChartEnhanced = function(context){
 		var chart = this;
 		this.canvas = context.canvas;
 
@@ -49,7 +49,7 @@
 		return this;
 	};
 	//Globally expose the defaults to allow for user updating/changing
-	ChartEnhaced.defaults = {
+	ChartEnhanced.defaults = {
 		global: {
 			// Boolean - Whether to animate the chart
 			animation: true,
@@ -189,10 +189,10 @@
 	};
 
 	//Create a dictionary of chart types, to allow for extension of existing types
-	ChartEnhaced.types = {};
+	ChartEnhanced.types = {};
 
-	//Global ChartEnhaced helpers object for utility methods and classes
-	var helpers = ChartEnhaced.helpers = {};
+	//Global ChartEnhanced helpers object for utility methods and classes
+	var helpers = ChartEnhanced.helpers = {};
 
 		//-- Basic js utility methods
 	var each = helpers.each = function(loopable,callback,self){
@@ -899,14 +899,14 @@
 
 	//Store a reference to each instance - allowing us to globally resize chart instances on window resize.
 	//Destroy method on the chart will remove the instance of the chart from this reference.
-	ChartEnhaced.instances = {};
+	ChartEnhanced.instances = {};
 
-	ChartEnhaced.Type = function(data,options,chart){
+	ChartEnhanced.Type = function(data,options,chart){
 		this.options = options;
 		this.chart = chart;
 		this.id = uid();
 		//Add the chart instance to the global namespace
-		ChartEnhaced.instances[this.id] = this;
+		ChartEnhanced.instances[this.id] = this;
 
 		// Initialize is always called when a chart type is created
 		// By default it is a no op, but it should be extended
@@ -917,7 +917,7 @@
 	};
 
 	//Core methods that'll be a part of every chart type
-	extend(ChartEnhaced.Type.prototype,{
+	extend(ChartEnhanced.Type.prototype,{
 		initialize : function(){return this;},
 		clear : function(){
 			clear(this.chart);
@@ -925,7 +925,7 @@
 		},
 		stop : function(){
 			// Stops any current animation loop occuring
-			ChartEnhaced.animationService.cancelAnimation(this);
+			ChartEnhanced.animationService.cancelAnimation(this);
 			return this;
 		},
 		resize : function(callback){
@@ -951,7 +951,7 @@
 			}
 			
 			if (this.options.animation && !reflow){
-				var animation = new ChartEnhaced.Animation();
+				var animation = new ChartEnhanced.Animation();
 				animation.numSteps = this.options.animationSteps;
 				animation.easing = this.options.animationEasing;
 				
@@ -968,7 +968,7 @@
 				animation.onAnimationProgress = this.options.onAnimationProgress;
 				animation.onAnimationComplete = this.options.onAnimationComplete;
 				
-				ChartEnhaced.animationService.addAnimation(this, animation);
+				ChartEnhanced.animationService.addAnimation(this, animation);
 			}
 			else{
 				this.draw();
@@ -998,7 +998,7 @@
 				canvas.style.removeAttribute('height');
 			}
 
-			delete ChartEnhaced.instances[this.id];
+			delete ChartEnhanced.instances[this.id];
 		},
 		showTooltip : function(ChartElements, forceRedraw){
 			// Only redraw the chart if we've actually changed what we're hovering on.
@@ -1089,7 +1089,7 @@
 							};
 						}).call(this, dataIndex);
 
-					new ChartEnhaced.MultiTooltip({
+					new ChartEnhanced.MultiTooltip({
 						x: medianPosition.x,
 						y: medianPosition.y,
 						xPadding: this.options.tooltipXPadding,
@@ -1117,7 +1117,7 @@
 				} else {
 					each(ChartElements, function(Element) {
 						var tooltipPosition = Element.tooltipPosition();
-						new ChartEnhaced.Tooltip({
+						new ChartEnhanced.Tooltip({
 							x: Math.round(tooltipPosition.x),
 							y: Math.round(tooltipPosition.y),
 							xPadding: this.options.tooltipXPadding,
@@ -1143,7 +1143,7 @@
 		}
 	});
 
-	ChartEnhaced.Type.extend = function(extensions){
+	ChartEnhanced.Type.extend = function(extensions){
 
 		var parent = this;
 
@@ -1156,7 +1156,7 @@
 		//Now overwrite some of the properties in the base class with the new extensions
 		extend(ChartType.prototype, extensions);
 
-		ChartType.extend = ChartEnhaced.Type.extend;
+		ChartType.extend = ChartEnhanced.Type.extend;
 
 		if (extensions.name || parent.prototype.name){
 
@@ -1167,15 +1167,15 @@
 			//I.e. if we extend a line chart, we'll use the defaults from the line chart if our new chart
 			//doesn't define some defaults of their own.
 
-			var baseDefaults = (ChartEnhaced.defaults[parent.prototype.name]) ? clone(ChartEnhaced.defaults[parent.prototype.name]) : {};
+			var baseDefaults = (ChartEnhanced.defaults[parent.prototype.name]) ? clone(ChartEnhanced.defaults[parent.prototype.name]) : {};
 
-			ChartEnhaced.defaults[chartName] = extend(baseDefaults,extensions.defaults);
+			ChartEnhanced.defaults[chartName] = extend(baseDefaults,extensions.defaults);
 
-			ChartEnhaced.types[chartName] = ChartType;
+			ChartEnhanced.types[chartName] = ChartType;
 
-			//Register this new chart type in the ChartEnhaced prototype
-			ChartEnhaced.prototype[chartName] = function(data,options){
-				var config = merge(ChartEnhaced.defaults.global, ChartEnhaced.defaults[chartName], options || {});
+			//Register this new chart type in the ChartEnhanced prototype
+			ChartEnhanced.prototype[chartName] = function(data,options){
+				var config = merge(ChartEnhanced.defaults.global, ChartEnhanced.defaults[chartName], options || {});
 				return new ChartType(data,config,this);
 			};
 		} else{
@@ -1184,12 +1184,12 @@
 		return parent;
 	};
 
-	ChartEnhaced.Element = function(configuration){
+	ChartEnhanced.Element = function(configuration){
 		extend(this,configuration);
 		this.initialize.apply(this,arguments);
 		this.save();
 	};
-	extend(ChartEnhaced.Element.prototype,{
+	extend(ChartEnhanced.Element.prototype,{
 		initialize : function(){},
 		restore : function(props){
 			if (!props){
@@ -1230,10 +1230,10 @@
 		}
 	});
 
-	ChartEnhaced.Element.extend = inherits;
+	ChartEnhanced.Element.extend = inherits;
 
 
-	ChartEnhaced.Point = ChartEnhaced.Element.extend({
+	ChartEnhanced.Point = ChartEnhanced.Element.extend({
 		display: true,
 		inRange: function(chartX,chartY){
 			var hitDetectionRange = this.hitDetectionRadius + this.radius;
@@ -1284,7 +1284,7 @@
 		}
 	});
 
-	ChartEnhaced.Arc = ChartEnhaced.Element.extend({
+	ChartEnhanced.Arc = ChartEnhanced.Element.extend({
 		inRange : function(chartX,chartY){
 
 			var pointRelativePosition = helpers.getAngleFromPoint(this, {
@@ -1343,7 +1343,7 @@
 		}
 	});
 
-	ChartEnhaced.Rectangle = ChartEnhaced.Element.extend({
+	ChartEnhanced.Rectangle = ChartEnhanced.Element.extend({
 		draw : function(){
 			var ctx = this.ctx,
 				halfWidth = this.width/2,
@@ -1385,7 +1385,7 @@
 		}
 	});
 
-	ChartEnhaced.Animation = ChartEnhaced.Element.extend({
+	ChartEnhanced.Animation = ChartEnhanced.Element.extend({
 		currentStep: null, // the current animation step
 		numSteps: 60, // default number of steps
 		easing: "", // the easing to use for this animation
@@ -1395,7 +1395,7 @@
 		onAnimationComplete: null, // user specified callback to fire when the animation finishes
 	});
 	
-	ChartEnhaced.Tooltip = ChartEnhaced.Element.extend({
+	ChartEnhanced.Tooltip = ChartEnhanced.Element.extend({
 		draw : function(){
 
 			var ctx = this.chart.ctx;
@@ -1478,7 +1478,7 @@
 		}
 	});
 
-	ChartEnhaced.MultiTooltip = ChartEnhaced.Element.extend({
+	ChartEnhanced.MultiTooltip = ChartEnhanced.Element.extend({
 		initialize : function(){
 			this.font = fontString(this.fontSize,this.fontStyle,this.fontFamily);
 
@@ -1567,7 +1567,7 @@
 		}
 	});
 
-	ChartEnhaced.Scale = ChartEnhaced.Element.extend({
+	ChartEnhanced.Scale = ChartEnhanced.Element.extend({
 		initialize : function(){
 			this.fit();
 		},
@@ -1700,7 +1700,7 @@
 			}
 
 		},
-		// Needs to be overidden in each ChartEnhaced type
+		// Needs to be overidden in each ChartEnhanced type
 		// Otherwise we need to pass all the data into the scale class
 		calculateYRange: noop,
 		drawingArea: function(){
@@ -1876,7 +1876,7 @@
 
 	});
 
-	ChartEnhaced.animationService = {
+	ChartEnhanced.animationService = {
 		frameDuration: 17,
 		animations: [],
 		dropFrames: 0,
@@ -1912,7 +1912,7 @@
 		},
 		// calls startDigest with the proper context
 		digestWrapper: function() {
-			ChartEnhaced.animationService.startDigest.call(ChartEnhaced.animationService);
+			ChartEnhanced.animationService.startDigest.call(ChartEnhanced.animationService);
 		},
 		startDigest: function() {
 
@@ -1970,7 +1970,7 @@
 		return function(){
 			clearTimeout(timeout);
 			timeout = setTimeout(function(){
-				each(ChartEnhaced.instances,function(instance){
+				each(ChartEnhanced.instances,function(instance){
 					// If the responsive flag is set in the chart instance config
 					// Cascade the resize event down to the chart.
 					if (instance.options.responsive){
@@ -1983,18 +1983,18 @@
 
 
 	if (amd) {
-		define('ChartEnhaced', [], function(){
-			return ChartEnhaced;
+		define('ChartEnhanced', [], function(){
+			return ChartEnhanced;
 		});
 	} else if (typeof module === 'object' && module.exports) {
-		module.exports = ChartEnhaced;
+		module.exports = ChartEnhanced;
 	}
 
-	root.ChartEnhaced = ChartEnhaced;
+	root.ChartEnhanced = ChartEnhanced;
 
-	ChartEnhaced.noConflict = function(){
-		root.ChartEnhaced = previous;
-		return ChartEnhaced;
+	ChartEnhanced.noConflict = function(){
+		root.ChartEnhanced = previous;
+		return ChartEnhanced;
 	};
 
 }).call(this);
@@ -2003,8 +2003,8 @@
 	"use strict";
 
 	var root = this,
-		ChartEnhaced = root.ChartEnhaced,
-		helpers = ChartEnhaced.helpers;
+		ChartEnhanced = root.ChartEnhanced,
+		helpers = ChartEnhanced.helpers;
 
 
 	var defaultConfig = {
@@ -2049,7 +2049,7 @@
 
 	};
 
-	ChartEnhaced.Type.extend({
+	ChartEnhanced.Type.extend({
 		name: "Bar",
 		defaults : defaultConfig,
 		initialize:  function(data){
@@ -2057,7 +2057,7 @@
 			//Expose options as a scope variable here so we can access it in the ScaleClass
 			var options = this.options;
 
-			this.ScaleClass = ChartEnhaced.Scale.extend({
+			this.ScaleClass = ChartEnhanced.Scale.extend({
 				offsetGridLines : true,
 				calculateBarX : function(datasetCount, datasetIndex, barIndex){
 					//Reusable method for calculating the xPosition of a given bar based on datasetIndex & width of the bar
@@ -2097,7 +2097,7 @@
 			}
 
 			//Declare the extension of the default point, to cater for the options passed in to the constructor
-			this.BarClass = ChartEnhaced.Rectangle.extend({
+			this.BarClass = ChartEnhanced.Rectangle.extend({
 				strokeWidth : this.options.barStrokeWidth,
 				showStroke : this.options.barShowStroke,
 				ctx : this.chart.ctx

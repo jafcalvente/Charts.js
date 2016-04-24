@@ -132,9 +132,9 @@ var originalChart = function(infoDuration, infoShots, chartId) {
 };
 
 /**
- * Enhaced bar chart.
+ * Enhanced bar chart.
  */
-var enhacedChart = function(infoDuration, infoShots, chartId) {
+var enhancedChart = function(infoDuration, infoShots, chartId) {
 
 	var labels = new Array();
 	var dataShots = new Array();
@@ -284,11 +284,11 @@ var enhacedChart = function(infoDuration, infoShots, chartId) {
 		};
 
 	// Creating chart
-	new ChartEnhaced(ctx).Bar(chartInfo, options);
+	new ChartEnhanced(ctx).Bar(chartInfo, options);
 	console.log('Created chart ' + chartId);
 };
 
 $(function() {
 	originalChart(JSON.parse(datos1), JSON.parse(datos2), $('#chart1'));
-	enhacedChart(JSON.parse(datos1), JSON.parse(datos2), $('#chart2'));
+	enhancedChart(JSON.parse(datos1), JSON.parse(datos2), $('#chart2'));
 });
